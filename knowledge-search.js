@@ -12,7 +12,7 @@
 // 注: 本番環境では、このURLを実際のWebhook URLに置き換えてください
 const API_CONFIG = {
     // n8n の Webhook URL （例）
-    endpoint: 'http://localhost:5678/webhook/ai-search',
+    endpoint: 'http://localhost:5678/webhook-test/ai-search',
     
     // リクエストタイムアウト（ミリ秒）
     timeout: 30000,
@@ -310,3 +310,4 @@ function showMockResult() {
 // 開発用: コンソールから showMockResult() で テスト表示を確認できます
 console.log('💡 開発中です。テスト用に console で showMockResult() を実行できます。');
 console.log('API endpoint:', API_CONFIG.endpoint);
+
