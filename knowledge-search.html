@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ナレッジベース AI検索</title>
+    <link rel="stylesheet" href="knowledge-search.css">
+</head>
+<body>
+    <main class="container">
+        <!-- ヘッダー -->
+        <header class="header">
+            <h1 class="title">ナレッジベース</h1>
+            <p class="subtitle">AIが社内ドキュメントから情報を検索します</p>
+        </header>
+
+        <!-- 検索セクション -->
+        <section class="search-section">
+            <div class="search-box">
+                <textarea 
+                    id="queryInput" 
+                    class="query-input"
+                    placeholder="質問を入力してください&#10;例：プロジェクトの進め方、契約書のテンプレート、etc."
+                    aria-label="検索キーワード入力欄"
+                ></textarea>
+            </div>
+            <button id="searchBtn" class="search-button" onclick="handleSearch()">
+                <span id="btnText">検索</span>
+            </button>
+        </section>
+
+        <!-- 結果表示エリア -->
+        <section id="resultSection" class="result-section" style="display: none;">
+            <!-- ローディング状態 -->
+            <div id="loadingState" class="loading-state">
+                <div class="spinner"></div>
+                <p>検索中...</p>
+            </div>
+
+            <!-- 結果表示 -->
+            <div id="resultContent" class="result-content" style="display: none;">
+                <!-- 回答 -->
+                <div class="answer-box">
+                    <h2 class="result-heading">回答</h2>
+                    <div id="answerText" class="answer-text"></div>
+                </div>
+
+                <!-- メタデータ（ファイル数、検索時刻など） -->
+                <div id="metadata" class="metadata"></div>
+
+                <!-- 参照記事リスト -->
+                <div id="sourcesContainer" class="sources-container" style="display: none;">
+                    <h2 class="result-heading">参照元</h2>
+                    <div id="sourcesList" class="sources-list"></div>
+                </div>
+            </div>
+
+            <!-- エラー表示 -->
+            <div id="errorContent" class="error-content" style="display: none;">
+                <p id="errorMessage"></p>
+            </div>
+        </section>
+    </main>
+
+    <!-- JavaScriptの読み込み -->
+    <script src="knowledge-search.js"></script>
+</body>
+</html>

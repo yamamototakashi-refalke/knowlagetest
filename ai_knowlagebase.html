@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ナレッジベース AI検索</title>
+    <link rel="stylesheet" href="ai_knowlagebase.css">
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 ナレッジベース AI検索</h1>
+        <p class="subtitle">Google Drive内のドキュメントから必要な情報を検索します</p>
+
+        <div class="search-box">
+            <textarea 
+                id="queryInput" 
+                placeholder="質問を入力してください&#10;例: プロジェクトの進め方について教えて"
+            ></textarea>
+        </div>
+
+        <button class="search-btn" id="searchBtn" onclick="search()">
+            <span id="btnText">検索する</span>
+        </button>
+
+        <div class="result-box" id="resultBox">
+            <div id="loadingState" class="loading">
+                <div class="spinner"></div>
+                <div>検索中...</div>
+            </div>
+
+            <div id="resultContent">
+                <div class="result-title">💡 回答</div>
+                <div class="result-content" id="answerText"></div>
+
+                <div class="metadata" id="metadata"></div>
+
+                <div class="sources" id="sourcesBox">
+                    <div class="sources-title">📚 参照元ドキュメント</div>
+                    <div id="sourcesList"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ⚠️ ここにn8nのWebhook URLを設定してください
+        const API_ENDPOINT = 'http://localhost:5678/webhook/ai-search';
+
+        async function search() {
+            const query = document.getElementById('queryInput').value.trim();
+            
+            if (!query) {
+                alert('質問を入力してください');
+                return;
+            }
+
+            const resultBox = document.getElementById('resultBox');
+            const loadingState = document.getElementById('loadingState');
+            const resultContent = document.getElementById('resultContent');
+            const searchBtn = document.getElementById('searchBtn');
+            const btnText = document.getElementById('btnText');
+
+            // UI状態をリセット
+            resultBox.classList.add('show');
+            resultBox.classList.remove('error');
+            loadingState.style.display = 'block';
+            resultContent.style.display = 'none';
+            searchBtn.disabled = true;
+            btnText.textContent = '検索中...';
+
+            try {
+                const response = await fetch(API_ENDPOINT, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ query })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTPエラー: ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                // 結果表示
+                document.getElementById('answerText').textContent = data.answer;
+                
+                // メタデータ表示
+                const metadata = document.getElementById('metadata');
+                metadata.innerHTML = `
+                    <div class="metadata-item">📄 ${data.metadata.fileCount}件のファイルを参照</div>
+                    <div class="metadata-item">🕐 ${new Date(data.metadata.timestamp).toLocaleString('ja-JP')}</div>
+                `;
+
+                // ソース表示
+                if (data.sources && data.sources.length > 0) {
+                    const sourcesBox = document.getElementById('sourcesBox');
+                    const sourcesList = document.getElementById('sourcesList');
+                    
+                    sourcesList.innerHTML = data.sources.map(source => `
+                        <div class="source-item">
+                            <svg class="source-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                            </svg>
+                            <a href="${source.url}" target="_blank" class="source-link">${source.name}</a>
+                        </div>
+                    `).join('');
+                    
+                    sourcesBox.style.display = 'block';
+                }
+
+                loadingState.style.display = 'none';
+                resultContent.style.display = 'block';
+
+            } catch (error) {
+                console.error('検索エラー:', error);
+                
+                resultBox.classList.add('error');
+                document.getElementById('answerText').textContent = 
+                    'エラーが発生しました。管理者に連絡してください。\n\n' + 
+                    'エラー詳細: ' + error.message;
+                
+                loadingState.style.display = 'none';
+                resultContent.style.display = 'block';
+                document.getElementById('sourcesBox').style.display = 'none';
+            } finally {
+                searchBtn.disabled = false;
+                btnText.textContent = '検索する';
+            }
+        }
+
+        // Enterキーで検索（Shift+Enterで改行）
+        document.getElementById('queryInput').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                search();
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,319 @@
+/* ===================================================
+   Knowledge Search UI - シンプルで洗練された社内ツール
+   ================================================== */
+
+/* ============ リセット ============ */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* ============ 基本スタイル ============ */
+html, body {
+    height: 100%;
+    width: 100%;
+}
+
+body {
+    background-color: #fafbfc;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+    color: #2c3e50;
+    line-height: 1.6;
+    font-size: 14px;
+}
+
+/* ============ コンテナレイアウト ============ */
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 60px 40px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ============ ヘッダーセクション ============ */
+.header {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.title {
+    font-size: 32px;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 8px;
+    letter-spacing: -0.5px;
+}
+
+.subtitle {
+    font-size: 14px;
+    color: #7f8c8d;
+    font-weight: 400;
+}
+
+/* ============ 検索セクション ============ */
+.search-section {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 40px;
+}
+
+.search-box {
+    position: relative;
+}
+
+.query-input {
+    width: 100%;
+    padding: 16px 18px;
+    border: 1px solid #dce3e8;
+    border-radius: 6px;
+    font-size: 14px;
+    font-family: inherit;
+    resize: vertical;
+    min-height: 110px;
+    background-color: #ffffff;
+    color: #2c3e50;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    outline: none;
+}
+
+.query-input:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.08);
+}
+
+.query-input::placeholder {
+    color: #95aab5;
+}
+
+/* ============ 検索ボタン ============ */
+.search-button {
+    padding: 14px 32px;
+    background-color: #3b82f6;
+    color: #ffffff;
+    border: none;
+    border-radius: 6px;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+}
+
+.search-button:hover:not(:disabled) {
+    background-color: #2563eb;
+}
+
+.search-button:active:not(:disabled) {
+    transform: scale(0.98);
+}
+
+.search-button:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+/* ============ 結果セクション ============ */
+.result-section {
+    animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ============ ローディング状態 ============ */
+.loading-state {
+    text-align: center;
+    padding: 40px;
+}
+
+.spinner {
+    width: 32px;
+    height: 32px;
+    border: 3px solid #e5e7eb;
+    border-top-color: #3b82f6;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin: 0 auto 16px;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.loading-state p {
+    color: #7f8c8d;
+    font-size: 14px;
+}
+
+/* ============ 結果コンテンツ ============ */
+.result-content {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+}
+
+.answer-box {
+    background-color: #ffffff;
+    border: 1px solid #dce3e8;
+    border-radius: 6px;
+    padding: 24px;
+}
+
+.result-heading {
+    font-size: 16px;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 14px;
+    letter-spacing: -0.3px;
+}
+
+.answer-text {
+    color: #3e4c59;
+    line-height: 1.8;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+/* ============ メタデータ ============ */
+.metadata {
+    display: flex;
+    gap: 24px;
+    padding: 12px 0;
+    font-size: 13px;
+    color: #7f8c8d;
+    border-top: 1px solid #e5e7eb;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.metadata-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* ============ 参照元リスト ============ */
+.sources-container {
+    background-color: #ffffff;
+    border: 1px solid #dce3e8;
+    border-radius: 6px;
+    padding: 24px;
+}
+
+.sources-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.source-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    background-color: #f8fafb;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.source-item:hover {
+    background-color: #f0f4f9;
+}
+
+.source-icon {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    color: #3b82f6;
+}
+
+.source-link {
+    color: #3b82f6;
+    text-decoration: none;
+    font-size: 13px;
+    word-break: break-all;
+    transition: opacity 0.2s;
+}
+
+.source-link:hover {
+    opacity: 0.8;
+    text-decoration: underline;
+}
+
+.source-name {
+    font-weight: 500;
+    color: #2c3e50;
+}
+
+/* ============ エラー表示 ============ */
+.error-content {
+    background-color: #fef2f2;
+    border: 1px solid #fca5a5;
+    border-radius: 6px;
+    padding: 20px;
+    color: #991b1b;
+    font-size: 14px;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+/* ============ レスポンシブ（参考: タブレット以上） ============ */
+@media (min-width: 768px) {
+    .container {
+        padding: 80px 60px;
+    }
+
+    .title {
+        font-size: 36px;
+    }
+
+    .query-input {
+        padding: 18px 20px;
+        min-height: 120px;
+    }
+}
+
+/* ============ 調整用: 最小サイズ対応 ============ */
+@media (max-width: 600px) {
+    .container {
+        padding: 40px 24px;
+    }
+
+    .title {
+        font-size: 28px;
+    }
+
+    .header {
+        margin-bottom: 36px;
+    }
+
+    .metadata {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .sources-list {
+        gap: 8px;
+    }
+
+    .search-section {
+        gap: 12px;
+    }
+
+    .search-button {
+        padding: 12px 24px;
+    }
+}
